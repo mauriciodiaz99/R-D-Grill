@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R & D Grill — Menú</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --fire-orange: #e8621a;
+      --fire-amber: #f0a030;
+      --gold: #c9a227;
+      --gold-light: #e8c55a;
+      --steel: #8a9aaa;
+      --steel-light: #c0cdd8;
+      --char: #0d0d0d;
+      --wood-dark: #111110;
+      --rust: #6b3020;
+      --ember: #ff4e00;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--char);
+      font-family: 'Cinzel', serif;
+    }
+
+    /* ── Wood texture bg ── */
+    body {
+      background-color: #0d0c0b;
+      background-image:
+        repeating-linear-gradient(90deg,
+          transparent 0px,
+          transparent 38px,
+          rgba(0, 0, 0, 0.18) 38px,
+          rgba(0, 0, 0, 0.18) 40px),
+        repeating-linear-gradient(180deg,
+          transparent 0px,
+          transparent 5px,
+          rgba(255, 255, 255, 0.012) 5px,
+          rgba(255, 255, 255, 0.012) 6px),
+        linear-gradient(175deg, #1a1510 0%, #0d0c0a 40%, #131210 70%, #0a0908 100%);
+      position: relative;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Ember glow vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse 60% 55% at 50% 45%, rgba(232, 98, 26, 0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 40% at 50% 100%, rgba(0, 0, 0, 0.7) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 30% at 50% 0%, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* ── Layout shell ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.6vh 2vw 0.6vh;
+      gap: 0;
+    }
+
+    /* ── Header / Logo area ── */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15vh;
+      width: 100%;
+    }
+
+    .logo-wrap {
+      height: min(26vw, 26vh);
+      filter: drop-shadow(0 0 14px rgba(232, 98, 26, 0.55)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+      animation: flicker 4s ease-in-out infinite;
+    }
+
+    @keyframes flicker {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 14px rgba(232, 98, 26, 0.55)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 22px rgba(240, 160, 48, 0.7)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+      }
+    }
+
+    .logo-wrap img {
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    /* Decorative divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: min(600px, 92vw);
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold) 60%, transparent);
+      opacity: 0.6;
+    }
+
+    .divider-icon {
+      color: var(--gold);
+      font-size: 1rem;
+      opacity: 0.7;
+      letter-spacing: 4px;
+    }
+
+    /* ── Menu column (vertical) ── */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: min(620px, 94vw);
+      align-items: stretch;
+      padding-top: 0.1vh;
+      overflow: hidden;
+    }
+
+    .row-sep {
+      height: 1px;
+      margin: 0.15vh 0;
+      background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.45) 30%, rgba(201, 162, 39, 0.45) 70%, transparent);
+      position: relative;
+    }
+
+    .row-sep::before {
+      content: '🔥';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      filter: drop-shadow(0 0 6px var(--fire-orange));
+    }
+
+    /* ── Section ── */
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1rem, 2.8vh, 3.5rem);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fire-amber);
+      text-shadow: 0 0 18px rgba(232, 98, 26, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
+      text-align: center;
+      padding: 0.1vh 0 0.12vh;
+      border-bottom: 1px solid rgba(201, 162, 39, 0.35);
+      margin-bottom: 0.1vh;
+    }
+
+    /* ── Menu item row ── */
+    .item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0.15vh 0.5vw;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .item:hover {
+      background: rgba(232, 98, 26, 0.06);
+    }
+
+    .item:hover .item-name::before {
+      opacity: 1;
+    }
+
+    .item-name {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(1rem, 2.65vh, 3.2rem);
+      color: var(--steel-light);
+      letter-spacing: 0.02em;
+      flex: 1;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .item-name::before {
+      content: '▸ ';
+      color: var(--fire-orange);
+      font-size: 0.6em;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .item-dots {
+      flex: 1;
+      border-bottom: 1px dotted rgba(201, 162, 39, 0.2);
+      margin-bottom: 0.18em;
+      min-width: 10px;
+    }
+
+    /* precio + nota en la MISMA línea → no agrega altura extra */
+    .item-right {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .item-price {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.65vh, 3.2rem);
+      color: var(--gold-light);
+      text-shadow: 0 0 10px rgba(201, 162, 39, 0.45);
+      white-space: nowrap;
+    }
+
+    .item-price span {
+      font-size: 0.7em;
+      color: var(--gold);
+      opacity: 0.8;
+    }
+
+    .item-note {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(0.7rem, 1.6vh, 1.9rem);
+      color: rgba(192, 205, 216, 0.5);
+      white-space: nowrap;
+    }
+
+    /* Alitas sub-label */
+    .alitas-grid {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .alitas-header {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 6px;
+      margin-bottom: 0.3vh;
+    }
+
+    .ah-label {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.5rem, 1vw, 0.6rem);
+      color: var(--gold);
+      opacity: 0.55;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .ah-sep {
+      background: rgba(201, 162, 39, 0.2);
+    }
+
+    /* ── Phone numbers ── */
+    .phones {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2vw;
+      flex-wrap: wrap;
+      margin-top: 0.2vh;
+    }
+
+    .phone-entry {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .phone-num {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(1.1rem, 3vh, 3.6rem);
+      font-weight: 700;
+      color: var(--fire-amber);
+      text-shadow: 0 0 12px rgba(232, 98, 26, 0.6), 0 1px 2px rgba(0, 0, 0, 0.9);
+      letter-spacing: 0.08em;
+    }
+
+    .phone-icon {
+      font-size: clamp(1rem, 2.8vh, 3.2rem);
+    }
+
+    .phone-sep {
+      width: 1px;
+      height: 24px;
+      background: rgba(201, 162, 39, 0.3);
+    }
+
+    /* ── Complementos section (small, centered below left col) ── */
+    .complementos {
+      margin-top: 0.8vh;
+      padding-top: 0.5vh;
+      border-top: 1px solid rgba(201, 162, 39, 0.2);
+    }
+
+    .footer {
+      width: 100%;
+      text-align: center;
+      padding-top: 0.2vh;
+    }
+
+    .footer-text {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.65rem, 1.5vh, 1.8rem);
+      letter-spacing: 0.2em;
+      color: rgba(201, 162, 39, 0.35);
+      text-transform: uppercase;
+    }
+
+    /* ── Entrance animation ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .menu-grid {
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .footer {
+      animation: fadeUp 0.5s 0.5s ease both;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo-wrap">
+        <img src="Gemini_Generated_Image_hqs3fghqs3fghqs3.png" alt="R&D Grill Logo">
+      </div>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-icon">★ ★ ★</div>
+        <div class="divider-line"></div>
+      </div>
+    </div>
+
+    <!-- MENU COLUMN (vertical) -->
+    <div class="menu-grid">
+
+      <!-- 1) ESPECIALIDADES ASADAS -->
+      <div class="section">
+        <div class="section-title">Especialidades</div>
+
+        <div class="item">
+          <span class="item-name">Lomo de Res</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 140</span></div>
+        </div>
+        <div class="item">
+          <span class="item-name">Pollo a la Plancha</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 135</span></div>
+        </div>
+        <div class="item">
+          <span class="item-name">Chuleta Asada</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 140</span></div>
+        </div>
+        <div class="item">
+          <span class="item-name">Costillas BBQ</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 150</span></div>
+        </div>
+        <div class="item">
+          <span class="item-name">Hamburguesa con Papas</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 150</span></div>
+        </div>
+      </div>
+
+      <div class="row-sep"></div>
+
+      <!-- 2) ALITAS & FINGERS -->
+      <div class="section">
+        <div class="section-title">Alitas &amp; Fingers</div>
+
+        <div class="item">
+          <span class="item-name">Alitas <em>#4</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 120</span>
+            <span class="item-note">+ Papas</span>
+          </div>
+        </div>
+        <div class="item">
+          <span class="item-name">Alitas <em>#6</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 150</span>
+            <span class="item-note">+ Papas</span>
+          </div>
+        </div>
+        <div class="item">
+          <span class="item-name">Alitas <em>#8</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 180</span>
+            <span class="item-note">+ Papas</span>
+          </div>
+        </div>
+        <div class="item">
+          <span class="item-name">Alitas <em>#10</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 220</span>
+            <span class="item-note">+ Papas</span>
+          </div>
+        </div>
+        <div class="item">
+          <span class="item-name">Alitas <em>#12</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 250</span>
+            <span class="item-note">+ Papas</span>
+          </div>
+        </div>
+        <div class="item">
+          <span class="item-name">Fingers <em>#6</em></span>
+          <span class="item-dots"></span>
+          <div class="item-right">
+            <span class="item-price">L<span>.</span> 150</span>
+            <span class="item-note">con Papas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-sep"></div>
+
+      <!-- 3) COMPLEMENTOS EXTRAS -->
+      <div class="section">
+        <div class="section-title">Complementos Extras</div>
+        <div class="item">
+          <span class="item-name">Chorizo Parrillero</span>
+          <span class="item-dots"></span>
+          <div class="item-right"><span class="item-price">L<span>.</span> 40</span></div>
+        </div>
+      </div>
+
+    </div><!-- /menu-grid -->
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="phones" style="margin-top:0.5vh;">
+        <div class="phone-entry">
+          <span class="phone-icon">📞</span>
+          <span class="phone-num">+504 9329-5260</span>
+        </div>
+        <div class="phone-sep"></div>
+        <div class="phone-entry">
+          <span class="phone-icon">📞</span>
+          <span class="phone-num">+504 9836-1287</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>
