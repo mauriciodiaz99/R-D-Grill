@@ -381,6 +381,116 @@
     .footer {
       animation: fadeUp 0.5s 0.5s ease both;
     }
+
+    /* ── Section body con imagen central ── */
+    .section-body {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .col-names {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    .row-name {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(1rem, 2.65vh, 3.2rem);
+      color: var(--steel-light);
+      padding: 0.15vh 0.5vw;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .row-name:last-child {
+      border-bottom: none;
+    }
+
+    .col-img {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      filter: drop-shadow(0 0 10px rgba(232, 98, 26, 0.55));
+      transition: filter 0.3s;
+    }
+
+    .col-img:hover {
+      filter: drop-shadow(0 0 20px rgba(240, 160, 48, 0.85));
+    }
+
+    .col-img img {
+      width: auto;
+      height: 100%;
+      max-width: clamp(50px, 19vw, 170px);
+      object-fit: contain;
+    }
+
+    .col-prices {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+
+    .row-price {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2.65vh, 3.2rem);
+      color: var(--gold-light);
+      text-shadow: 0 0 10px rgba(201, 162, 39, 0.45);
+      white-space: nowrap;
+      padding: 0.15vh 0.5vw;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      line-height: 1.15;
+    }
+
+    .row-price:last-child {
+      border-bottom: none;
+    }
+
+    .row-price span {
+      font-size: 0.7em;
+      color: var(--gold);
+      opacity: 0.8;
+    }
+
+    /* ── Decorativo (items normales) ── */
+    .deco {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      transition: filter 0.25s, opacity 0.25s;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 6px rgba(232, 98, 26, 0.5));
+    }
+
+    .item:hover .deco {
+      opacity: 1;
+      filter: drop-shadow(0 0 12px rgba(240, 160, 48, 0.85));
+    }
+
+    .deco img {
+      width: clamp(22px, 4.2vh, 52px);
+      height: clamp(22px, 4.2vh, 52px);
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .deco-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.3), transparent);
+      min-width: 8px;
+      align-self: center;
+    }
   </style>
 </head>
 
@@ -404,33 +514,55 @@
 
       <!-- 1) ESPECIALIDADES ASADAS -->
       <div class="section">
+
         <div class="section-title">Especialidades</div>
 
-        <div class="item">
-          <span class="item-name">Lomo de Res</span>
-          <span class="item-dots"></span>
-          <div class="item-right"><span class="item-price">L<span>.</span> 140</span></div>
+        <div class="section-body">
+
+          <!-- Columna izquierda: nombres -->
+
+          <div class="col-names">
+
+            <div class="row-name">Lomo de Res</div>
+
+            <div class="row-name">Pollo a la Plancha</div>
+
+            <div class="row-name">Chuleta Asada</div>
+
+            <div class="row-name">Costillas BBQ</div>
+
+            <div class="row-name">Hamburguesa con Papas</div>
+
+          </div>
+
+          <!-- Imagen central única que abarca toda la altura -->
+
+          <div class="col-img">
+
+            <img src="pollo.png" alt="Pollo asado">
+
+          </div>
+
+
+
+          <!-- Columna derecha: precios -->
+
+          <div class="col-prices">
+
+            <div class="row-price">L<span>.</span> 150</div>
+
+            <div class="row-price">L<span>.</span> 140</div>
+
+            <div class="row-price">L<span>.</span> 135</div>
+
+            <div class="row-price">L<span>.</span> 140</div>
+
+            <div class="row-price">L<span>.</span> 150</div>
+
+          </div>
+
         </div>
-        <div class="item">
-          <span class="item-name">Pollo a la Plancha</span>
-          <span class="item-dots"></span>
-          <div class="item-right"><span class="item-price">L<span>.</span> 135</span></div>
-        </div>
-        <div class="item">
-          <span class="item-name">Chuleta Asada</span>
-          <span class="item-dots"></span>
-          <div class="item-right"><span class="item-price">L<span>.</span> 140</span></div>
-        </div>
-        <div class="item">
-          <span class="item-name">Costillas BBQ</span>
-          <span class="item-dots"></span>
-          <div class="item-right"><span class="item-price">L<span>.</span> 150</span></div>
-        </div>
-        <div class="item">
-          <span class="item-name">Hamburguesa con Papas</span>
-          <span class="item-dots"></span>
-          <div class="item-right"><span class="item-price">L<span>.</span> 150</span></div>
-        </div>
+
       </div>
 
       <div class="row-sep"></div>
@@ -439,54 +571,54 @@
       <div class="section">
         <div class="section-title">Alitas &amp; Fingers</div>
 
-        <div class="item">
-          <span class="item-name">Alitas <em>#4</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 120</span>
-            <span class="item-note">+ Papas</span>
+
+        <div class="section-body">
+
+          <!-- Columna izquierda: nombres -->
+
+          <div class="col-names">
+
+            <div class="row-name">Alitas <em>#4</em></div>
+
+            <div class="row-name">Alitas <em>#6</em></div>
+
+            <div class="row-name">Alitas <em>#8</em></div>
+
+            <div class="row-name">Alitas <em>#10</em></div>
+
+            <div class="row-name">Alitas <em>#12</em></div>
+
+            <div class="row-name">Fingers <em>#6</em></div>
+
           </div>
-        </div>
-        <div class="item">
-          <span class="item-name">Alitas <em>#6</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 150</span>
-            <span class="item-note">+ Papas</span>
+          <!-- Imagen central única -->
+
+          <div class="col-img">
+
+            <img src="alitas.png" alt="Alitas">
+
           </div>
-        </div>
-        <div class="item">
-          <span class="item-name">Alitas <em>#8</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 180</span>
-            <span class="item-note">+ Papas</span>
+
+          <!-- Columna derecha: precios + nota -->
+
+          <div class="col-prices">
+
+            <div class="row-price">L<span>.</span> 120 <small class="item-note">+ Papas</small></div>
+
+            <div class="row-price">L<span>.</span> 150 <small class="item-note">+ Papas</small></div>
+
+            <div class="row-price">L<span>.</span> 180 <small class="item-note">+ Papas</small></div>
+
+            <div class="row-price">L<span>.</span> 220 <small class="item-note">+ Papas</small></div>
+
+            <div class="row-price">L<span>.</span> 250 <small class="item-note">+ Papas</small></div>
+
+            <div class="row-price">L<span>.</span> 150 <small class="item-note">con Papas</small></div>
+
           </div>
+
         </div>
-        <div class="item">
-          <span class="item-name">Alitas <em>#10</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 220</span>
-            <span class="item-note">+ Papas</span>
-          </div>
-        </div>
-        <div class="item">
-          <span class="item-name">Alitas <em>#12</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 250</span>
-            <span class="item-note">+ Papas</span>
-          </div>
-        </div>
-        <div class="item">
-          <span class="item-name">Fingers <em>#6</em></span>
-          <span class="item-dots"></span>
-          <div class="item-right">
-            <span class="item-price">L<span>.</span> 150</span>
-            <span class="item-note">con Papas</span>
-          </div>
-        </div>
+
       </div>
 
       <div class="row-sep"></div>
